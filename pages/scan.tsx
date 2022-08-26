@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { QrReader } from 'react-qr-reader';
 
 const ScanPage = () => {
@@ -15,20 +16,28 @@ const ScanPage = () => {
 };
 
 const QRBlock = ({ onChange }: { onChange: (textValue: string) => void }) => {
+  const [valueFound, setValueFound] = useState('');
+  useEffect(() => {
+    if (valueFound) {
+      onChange(valueFound);
+    }
+  }, [valueFound]);
   return (
     <div style={{ width: 300, height: 300 }}>
       <QrReader
         onResult={(result, error) => {
           if (!!result) {
-            onChange(result?.getText());
+            const resultText = result?.getText();
+            if (resultText && resultText !== valueFound) {
+              setValueFound(resultText);
+            }
           }
 
           if (!!error) {
-            console.info(error);
+            setValueFound(valueFound);
           }
         }}
         constraints={{}}
-        // style={{ width: '100%' }}
       />
     </div>
   );

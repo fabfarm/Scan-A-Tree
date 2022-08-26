@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { QrReader } from 'react-qr-reader';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../../src/API_SDK';
 import { DataFields } from '../../src/components/DataFields';
@@ -86,25 +85,6 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
           console.log(data);
           getItemData();
         }}
-      />
-    </div>
-  );
-};
-
-const QRBlock = ({ onChange }: { onChange: (textValue: string) => void }) => {
-  return (
-    <div style={{ width: 300, height: 300 }}>
-      <QrReader
-        onResult={(result, error) => {
-          if (!!result) {
-            onChange(result?.getText());
-          }
-
-          if (!!error) {
-            console.info(error);
-          }
-        }}
-        constraints={{}}
       />
     </div>
   );
