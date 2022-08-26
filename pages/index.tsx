@@ -31,21 +31,12 @@ const Home: NextPage = () => {
   const data = dataState.value;
 
   return (
-    <div style={{ padding: '2em' }}>
-      <div style={{ display: 'flex', gap: '.5em' }}>
+    <div className='p2'>
+      <div className='p0 flex'>
         {statusesState.value.map((status) => (
-          <span
-            key={status.name}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              textAlign: 'center',
-              padding: '0.5em',
-              aspectRatio: '1',
-            }}
-          >
-            <span style={{ fontSize: '3em' }}>{status.icon}</span>
-            <span>{status.name}</span>
+          <span key={status.name} className='status_item'>
+            <span className='status_item-icon'>{status.icon}</span>
+            <span className='status_item-name'>{status.name}</span>
           </span>
         ))}
       </div>
@@ -53,16 +44,7 @@ const Home: NextPage = () => {
         {data.map(({ id, name, age, comingFrom, status }) => {
           const itemStatus = statusByName[status];
           return (
-            <div
-              key={id}
-              style={{
-                padding: '.5em',
-                border: '1px solid #eee',
-                display: 'grid',
-                gridTemplateColumns: 'auto auto auto',
-                gap: '.2em',
-              }}
-            >
+            <div key={id} className='data_container'>
               <span>Name: {name}</span>
               <span>Planted on: {age}</span>
               <span>Coming from: {comingFrom}</span>
