@@ -37,6 +37,13 @@ const CheckPage = () => {
         {...(dataItem as unknown as Record<string, string>)}
         column={'true'}
       />
+      <ChangeStatusBlock
+        itemId={qrCodeValue}
+        onSuccess={(data) => {
+          console.log(data);
+          getDataState(qrCodeValue);
+        }}
+      />
     </div>
   );
 };
@@ -58,6 +65,34 @@ const QRBlock = ({ onChange }: { onChange: (textValue: string) => void }) => {
         // style={{ width: '100%' }}
       />
     </div>
+  );
+};
+
+const ChangeStatusBlock = ({
+  itemId,
+  onSuccess,
+}: {
+  itemId: string;
+  onSuccess: (data: any) => void;
+}) => {
+  const [inputValue, setInputValue] = useState('');
+  const [updateItemState, updateItem] = useAsyncFn(API_SDK.updateDataById);
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        updateItem(itemId, { status: inputValue }).then((data) =>
+          onSuccess(data),
+        );
+      }}
+    >
+      <input
+        value={inputValue}
+        onChange={(event) => setInputValue(event.target.value)}
+      />
+      <button type='submit'>Change status</button>
+    </form>
   );
 };
 
