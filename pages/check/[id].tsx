@@ -1,37 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { QrReader } from 'react-qr-reader';
 import { useAsyncFn } from 'react-use';
-import { API_SDK } from '../src/API_SDK';
-import { DataFields } from '../src/components/DataFields';
-import { StatusList } from '../src/components/StatusItem';
+import { API_SDK } from '../../src/API_SDK';
+import { DataFields } from '../../src/components/DataFields';
+import { StatusList } from '../../src/components/StatusItem';
 import {
   MetadataProvider,
   useMetadataContext,
-} from '../src/providers/metadataProvider';
+} from '../../src/providers/metadataProvider';
 
 const CheckPage = () => {
+  const router = useRouter();
+  const itemId = router.query?.id as string;
+  if (!itemId) {
+    return <div>No id received</div>;
+  }
   return (
     <MetadataProvider>
       <div style={{ padding: '0 1em' }}>
-        <CheckPageContent />
+        <CheckPageContent itemId={itemId} />
       </div>
     </MetadataProvider>
   );
 };
 
-const CheckPageContent = () => {
-  const [qrCodeValue, setQrCodeValue] = useState<string>();
-  const [dataState, getDataState] = useAsyncFn(API_SDK.getDataById);
+const CheckPageContent = ({ itemId }: { itemId: string }) => {
+  const [dataState, getItemData] = useAsyncFn(() =>
+    API_SDK.getDataById(itemId),
+  );
   const { statuses: statusesByName } = useMetadataContext();
+  const router = useRouter();
 
   useEffect(() => {
-    if (qrCodeValue) {
-      getDataState(qrCodeValue);
+    if (itemId) {
+      getItemData();
     }
-  }, [qrCodeValue]);
+  }, [itemId]);
 
   const RedoComponent = (
-    <div className='pointer p0' onClick={() => setQrCodeValue('')}>
+    <div className='pointer p0' onClick={() => router.push('/scan')}>
       Scan again 🔄
     </div>
   );
@@ -46,10 +54,6 @@ const CheckPageContent = () => {
         {dataState.error.message}
       </div>
     );
-  }
-  if (!qrCodeValue) {
-    // return <div>Voluntarily off</div>;
-    return <QRBlock onChange={setQrCodeValue} />;
   }
 
   if (!dataState.value) {
@@ -76,11 +80,11 @@ const CheckPageContent = () => {
         column={'true'}
       />
       <ChangeStatusBlock
-        itemId={qrCodeValue}
+        itemId={itemId}
         selected={dataItem?.status}
         onSuccess={(data) => {
           console.log(data);
-          getDataState(qrCodeValue);
+          getItemData();
         }}
       />
     </div>
@@ -101,7 +105,6 @@ const QRBlock = ({ onChange }: { onChange: (textValue: string) => void }) => {
           }
         }}
         constraints={{}}
-        // style={{ width: '100%' }}
       />
     </div>
   );
