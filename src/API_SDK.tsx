@@ -1,3 +1,5 @@
+import { Status } from './types/Status';
+
 const answerParser = (data: { error?: string }) => {
   if (data.error) {
     throw Error(data.error);
@@ -27,11 +29,6 @@ const ROUTES = {
   DATA: '/api/data',
   STATUSES: '/api/statuses',
   ONE_DATA: (dataId: string) => `/api/data/${dataId}`,
-};
-
-type Status = {
-  name: string;
-  icon: string;
 };
 
 export const API_SDK = {
