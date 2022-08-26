@@ -16,6 +16,9 @@ const Home: NextPage = () => {
   }, []);
 
   console.log(statusesState);
+  if (statusesState.loading || dataState.loading) {
+    return <div>Loading</div>;
+  }
 
   if (!statusesState.value) {
     return <div>No status found</div>;
