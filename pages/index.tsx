@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import { useEffect } from 'react';
 import { useAsync, useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
+import { DataFields } from '../src/components/DataFields';
 
 const Home: NextPage = () => {
   const statusesState = useAsync(API_SDK.getStatuses);
@@ -45,14 +46,17 @@ const Home: NextPage = () => {
       </div>
       <div style={{ padding: '2em' }}>
         {data.map(({ id, name, age, comingFrom, status }) => {
-          const itemStatus = statusByName[status];
           return (
-            <div key={id} className='data_container'>
-              <span>Name: {name}</span>
-              <span>Planted on: {age}</span>
-              <span>Coming from: {comingFrom}</span>
-              <span>Status: {itemStatus ? itemStatus.icon : '⁉'}</span>
-            </div>
+            <DataFields
+              key={id}
+              {...{
+                id,
+                name,
+                age,
+                comingFrom,
+                status: statusByName[status]?.icon || '⁉',
+              }}
+            />
           );
         })}
       </div>
