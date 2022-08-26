@@ -29,6 +29,7 @@ const ROUTES = {
   DATA: '/api/data',
   STATUSES: '/api/statuses',
   ONE_DATA: (dataId: string) => `/api/data/${dataId}`,
+  UPDATE_TREES: '/api/update_trees',
 };
 
 export const API_SDK = {
@@ -54,5 +55,8 @@ export const API_SDK = {
       id: itemId,
       newStatus: newStatus,
     });
+  },
+  updateTreesData: (data: string) => {
+    return basicFetchService.post(ROUTES.UPDATE_TREES, { data });
   },
 };
