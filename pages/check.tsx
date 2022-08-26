@@ -39,6 +39,7 @@ const CheckPage = () => {
       />
       <ChangeStatusBlock
         itemId={qrCodeValue}
+        selected={dataItem?.status}
         onSuccess={(data) => {
           console.log(data);
           getDataState(qrCodeValue);
@@ -71,28 +72,27 @@ const QRBlock = ({ onChange }: { onChange: (textValue: string) => void }) => {
 const ChangeStatusBlock = ({
   itemId,
   onSuccess,
+  selected,
 }: {
   itemId: string;
   onSuccess: (data: any) => void;
+  selected?: string;
 }) => {
-  const [inputValue, setInputValue] = useState('');
+  //   const [inputValue, setInputValue] = useState('');
   const [updateItemState, updateItem] = useAsyncFn(API_SDK.updateDataById);
+  const { statuses } = useMetadataContext();
+  const allStatuses = Object.values(statuses || {});
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        updateItem(itemId, { status: inputValue }).then((data) =>
+    <StatusList
+      statuses={allStatuses as any[]}
+      selected={selected}
+      onItemClick={(status) =>
+        updateItem(itemId, { status: status.name }).then((data) =>
           onSuccess(data),
-        );
-      }}
-    >
-      <input
-        value={inputValue}
-        onChange={(event) => setInputValue(event.target.value)}
-      />
-      <button type='submit'>Change status</button>
-    </form>
+        )
+      }
+    />
   );
 };
 

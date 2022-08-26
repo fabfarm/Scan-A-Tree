@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
 import { DataFields } from '../src/components/DataFields';
-import { StatusItem } from '../src/components/StatusItem';
+import { StatusList } from '../src/components/StatusItem';
 import {
   MetadataProvider,
   useMetadataContext,
@@ -45,11 +45,7 @@ const HomeContent: NextPage = () => {
 
   return (
     <div className='p2'>
-      <div className='p0 flex'>
-        {statuses.map((status: any) => (
-          <StatusItem status={status} key={status.icon} />
-        ))}
-      </div>
+      <StatusList statuses={statuses as any[]} />
       <div style={{ padding: '2em' }}>
         {data.map(({ id, name, age, comingFrom, status }) => {
           return (

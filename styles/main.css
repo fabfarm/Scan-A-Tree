@@ -32,3 +32,7 @@
   grid-template-columns: auto auto auto;
   gap: 0.2em;
 }
+
+.border_selected {
+  border: 2px solid #e99;
+}
