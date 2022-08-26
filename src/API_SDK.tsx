@@ -1,17 +1,28 @@
+const answerParser = (data: { error?: string }) => {
+  if (data.error) {
+    throw Error(data.error);
+  }
+  return data;
+};
+
+const responseParser = <T,>(response: Promise<Response>): Promise<T> => {
+  return response.then((res) => res.json()).then(answerParser) as Promise<T>;
+};
+
 const basicFetchService = {
   get: <T,>(url: string): Promise<T> => {
-    return fetch(url).then((res) => res.json());
+    return responseParser(fetch(url));
   },
   post: <T,>(url: string, body: Record<string, unknown>): Promise<T> => {
-    return fetch(url, { method: 'POST', body: JSON.stringify(body) }).then(
-      (res) => res.json(),
+    return responseParser(
+      fetch(url, { method: 'POST', body: JSON.stringify(body) }),
     );
   },
 };
 const ROUTES = {
   DATA: '/api/data',
   STATUSES: '/api/statuses',
-  UPDATE_STATUS: '/api/update_status',
+  ONE_DATA: (dataId: string) => `/api/data/${dataId}`,
 };
 
 type Status = {
@@ -22,6 +33,17 @@ type Status = {
 export const API_SDK = {
   getData: () => {
     return basicFetchService.get<Array<Record<string, string>>>(ROUTES.DATA);
+  },
+  getDataById: (dataId: string) => {
+    return basicFetchService.get<Array<Record<string, string>>>(
+      ROUTES.ONE_DATA(dataId),
+    );
+  },
+  updateDataById: (dataId: string, body: Record<string, string>) => {
+    return basicFetchService.post<Array<Record<string, string>>>(
+      ROUTES.ONE_DATA(dataId),
+      body,
+    );
   },
   getStatuses: () => {
     return basicFetchService.get<Status[]>(ROUTES.STATUSES);
