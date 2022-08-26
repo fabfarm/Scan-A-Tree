@@ -3,10 +3,26 @@ import { QrReader } from 'react-qr-reader';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
 import { DataFields } from '../src/components/DataFields';
+import { StatusList } from '../src/components/StatusItem';
+import {
+  MetadataProvider,
+  useMetadataContext,
+} from '../src/providers/metadataProvider';
 
 const CheckPage = () => {
-  const [qrCodeValue, setQrCodeValue] = useState<string>('2');
+  return (
+    <MetadataProvider>
+      <div style={{ padding: '0 1em' }}>
+        <CheckPageContent />
+      </div>
+    </MetadataProvider>
+  );
+};
+
+const CheckPageContent = () => {
+  const [qrCodeValue, setQrCodeValue] = useState<string>();
   const [dataState, getDataState] = useAsyncFn(API_SDK.getDataById);
+  const { statuses: statusesByName } = useMetadataContext();
 
   useEffect(() => {
     if (qrCodeValue) {
@@ -14,27 +30,49 @@ const CheckPage = () => {
     }
   }, [qrCodeValue]);
 
+  const RedoComponent = (
+    <div className='pointer p0' onClick={() => setQrCodeValue('')}>
+      Scan again 🔄
+    </div>
+  );
+
   if (dataState.loading) {
     return <div>Loading</div>;
   }
   if (dataState.error) {
-    return <div>{dataState.error.message}</div>;
+    return (
+      <div>
+        {RedoComponent}
+        {dataState.error.message}
+      </div>
+    );
   }
   if (!qrCodeValue) {
-    return <div>Voluntarily off</div>;
+    // return <div>Voluntarily off</div>;
     return <QRBlock onChange={setQrCodeValue} />;
   }
 
   if (!dataState.value) {
-    return <div>No data found</div>;
+    return (
+      <div>
+        {RedoComponent}
+        <div>No data found</div>
+      </div>
+    );
   }
 
-  const dataItem = dataState.value;
+  const dataItem = dataState.value as unknown as Record<string, string>;
 
   return (
     <div>
+      {RedoComponent}
       <DataFields
-        {...(dataItem as unknown as Record<string, string>)}
+        {...{
+          ...(dataItem as Record<string, string>),
+          status:
+            (statusesByName?.[dataItem?.status]?.icon as string) ||
+            dataItem?.status,
+        }}
         column={'true'}
       />
       <ChangeStatusBlock
