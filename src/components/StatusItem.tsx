@@ -12,7 +12,7 @@ export const StatusItem = ({
   return (
     <span
       key={status.name}
-      className={`status_item ${selected ? 'border_selected' : ''}`}
+      className={`status_item pointer ${selected ? 'border_selected' : ''}`}
       onClick={() => onClick?.(status)}
     >
       <span className='status_item-icon'>{status.icon}</span>
@@ -31,7 +31,7 @@ export const StatusList = ({
   selected?: string;
 }) => {
   return (
-    <div className='p0 flex'>
+    <div className='p0 flex gap0'>
       {statuses.map((status) => (
         <StatusItem
           status={status}

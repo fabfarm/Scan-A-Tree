@@ -36,3 +36,11 @@
 .border_selected {
   border: 2px solid #e99;
 }
+
+.pointer {
+  cursor: pointer;
+}
+
+.gap0 {
+  gap: 0.2em;
+}
