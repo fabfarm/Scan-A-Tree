@@ -1,12 +1,23 @@
-import { keyBy } from 'lodash';
 import type { NextPage } from 'next';
 import { useEffect } from 'react';
-import { useAsync, useAsyncFn } from 'react-use';
+import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
 import { DataFields } from '../src/components/DataFields';
+import {
+  MetadataProvider,
+  useMetadataContext,
+} from '../src/providers/metadataProvider';
 
-const Home: NextPage = () => {
-  const statusesState = useAsync(API_SDK.getStatuses);
+const Home = () => {
+  return (
+    <MetadataProvider>
+      <HomeContent />
+    </MetadataProvider>
+  );
+};
+
+const HomeContent: NextPage = () => {
+  const { statuses: statusesByName } = useMetadataContext();
   const [dataState, fetchData] = useAsyncFn(API_SDK.getData, [], {
     value: [],
     loading: true,
@@ -16,12 +27,11 @@ const Home: NextPage = () => {
     fetchData();
   }, []);
 
-  console.log(statusesState);
-  if (statusesState.loading || dataState.loading) {
+  if (dataState.loading) {
     return <div>Loading</div>;
   }
 
-  if (!statusesState.value) {
+  if (!statusesByName) {
     return <div>No status found</div>;
   }
 
@@ -29,15 +39,13 @@ const Home: NextPage = () => {
     return null;
   }
 
-  const statuses = statusesState.value;
-  const statusByName = keyBy(statuses, (status) => status.name);
-
+  const statuses = Object.values(statusesByName);
   const data = dataState.value;
 
   return (
     <div className='p2'>
       <div className='p0 flex'>
-        {statusesState.value.map((status) => (
+        {statuses.map((status: any) => (
           <span key={status.name} className='status_item'>
             <span className='status_item-icon'>{status.icon}</span>
             <span className='status_item-name'>{status.name}</span>
@@ -54,7 +62,7 @@ const Home: NextPage = () => {
                 name,
                 age,
                 comingFrom,
-                status: statusByName[status]?.icon || '⁉',
+                status: statusesByName[status]?.icon || '⁉',
               }}
             />
           );

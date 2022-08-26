@@ -1,5 +1,5 @@
 import { keyBy } from 'lodash';
-import { createContext, ReactNode } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
 import { useLocalStorage } from 'react-use';
 import { API_SDK } from '../API_SDK';
 
@@ -42,4 +42,9 @@ export const MetadataProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </MetaDataContext.Provider>
   );
+};
+
+export const useMetadataContext = () => {
+  const metadatas = useContext(MetaDataContext);
+  return metadatas;
 };
