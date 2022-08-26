@@ -15,7 +15,11 @@ const basicFetchService = {
   },
   post: <T,>(url: string, body: Record<string, unknown>): Promise<T> => {
     return responseParser(
-      fetch(url, { method: 'POST', body: JSON.stringify(body) }),
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
+      }),
     );
   },
 };
