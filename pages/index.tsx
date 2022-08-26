@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
 import { DataFields } from '../src/components/DataFields';
+import { StatusItem } from '../src/components/StatusItem';
 import {
   MetadataProvider,
   useMetadataContext,
@@ -46,10 +47,7 @@ const HomeContent: NextPage = () => {
     <div className='p2'>
       <div className='p0 flex'>
         {statuses.map((status: any) => (
-          <span key={status.name} className='status_item'>
-            <span className='status_item-icon'>{status.icon}</span>
-            <span className='status_item-name'>{status.name}</span>
-          </span>
+          <StatusItem status={status} key={status.icon} />
         ))}
       </div>
       <div style={{ padding: '2em' }}>
