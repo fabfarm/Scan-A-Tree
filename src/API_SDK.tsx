@@ -9,9 +9,9 @@ const basicFetchService = {
   },
 };
 const ROUTES = {
-  DATA: '/api/data/data',
-  STATUSES: '/api/data/statuses',
-  UPDATE_STATUS: '/api/data/update_status',
+  DATA: '/api/data',
+  STATUSES: '/api/statuses',
+  UPDATE_STATUS: '/api/update_status',
 };
 
 type Status = {
