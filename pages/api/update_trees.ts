@@ -15,9 +15,8 @@ export default async function handler(
 ) {
   const text2Parse = req.body.data;
 
-  const result = parser.toJson(text2Parse);
-
   try {
+    const result = parser.toJson(text2Parse);
     const parsedData: ParsedData.Result = JSON.parse(result);
 
     if (!parsedData?.kml?.Document?.Style) {
