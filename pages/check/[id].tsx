@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../../src/API_SDK';
-import { DataFields } from '../../src/components/DataFields';
+import {
+  AllItemStatuses,
+  PlantItemDatas,
+  PlantItemPicture,
+} from '../../src/components/DataFields';
 import { Layout } from '../../src/components/Layout';
 import { StatusList } from '../../src/components/StatusItem';
 import { useCustomRouter } from '../../src/customRouter';
@@ -55,24 +59,21 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
   const dataItem = dataState.value as unknown as Record<string, string>;
 
   return (
-    <div>
-      <DataFields
-        {...{
-          ...(dataItem as Record<string, string>),
-          status:
-            (statusesByName?.[dataItem?.status]?.icon as string) ||
-            dataItem?.status,
-        }}
-        column={'true'}
-      />
-      <ChangeStatusBlock
-        itemId={itemId}
-        selected={dataItem?.status}
-        onSuccess={(data) => {
-          console.log(data);
+    <div style={{ width: '100%' }}>
+      <PlantItemPicture dataItem={dataItem} />
+      <br />
+      <div className='bold'>Click to update statuses</div>
+      <AllItemStatuses
+        dataItem={dataItem}
+        showStatesNotTrue
+        onStatusUpdate={() => {
           getItemData();
         }}
       />
+      <br />
+      <div className='flex flex-column gap1'>
+        <PlantItemDatas dataItem={dataItem} />
+      </div>
     </div>
   );
 };

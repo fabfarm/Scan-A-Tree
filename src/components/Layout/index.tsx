@@ -15,6 +15,7 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
           padding: '0 1em',
           paddingBottom: BOTTOM_BAR_HEIGHT,
           overflow: 'scroll',
+          width: '100%',
         }}
       >
         {children}

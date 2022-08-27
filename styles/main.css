@@ -29,6 +29,14 @@
   padding: 2em;
 }
 
+.bold {
+  font-weight: bold;
+}
+
+.position-relative {
+  position: relative;
+}
+
 .status_item {
   display: flex;
   flex-direction: column;
@@ -72,6 +80,14 @@
   border-radius: 20px;
   overflow: hidden;
   position: relative;
+}
+
+.plant_list_item .plant_list_item-picture {
+  min-height: unset;
+}
+
+.plant_list_item-picture {
+  min-height: 200px;
 }
 
 .plant_list_item-left {
