@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
-import { DataFields } from '../src/components/DataFields';
+import { ListItem } from '../src/components/DataFields';
 import { Layout } from '../src/components/Layout';
 import { StatusList } from '../src/components/StatusItem';
 import {
@@ -49,20 +49,9 @@ const HomeContent: NextPage = () => {
   return (
     <>
       <StatusList statuses={statuses as any[]} />
-      <div style={{ padding: '2em' }}>
-        {data.map(({ id, name, age, comingFrom, status }) => {
-          return (
-            <DataFields
-              key={id}
-              {...{
-                id,
-                name,
-                age,
-                comingFrom,
-                status: statusesByName[status]?.icon || '⁉',
-              }}
-            />
-          );
+      <div style={{ padding: '2em' }} className='flex flex-column gap0'>
+        {data.map((itemData) => {
+          return <ListItem {...itemData} key={itemData.id} />;
         })}
       </div>
     </>

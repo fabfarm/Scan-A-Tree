@@ -9,6 +9,9 @@
 .align-center {
   align-items: center;
 }
+.justify-center {
+  justify-content: center;
+}
 
 .flex-1 {
   flex: 1;
@@ -55,4 +58,47 @@
 
 .gap0 {
   gap: 0.2em;
+}
+.gap1 {
+  gap: 0.4em;
+}
+
+.plant_list_item {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 0.2em;
+  /* padding: 0.5em; */
+  border: 1px solid #eee;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.plant_list_item-left {
+  position: relative;
+  max-width: 200px;
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+.plant_list_item-right {
+  padding: 0.5em;
+}
+
+.plant_list_item-name {
+  background-color: #000000be;
+  width: 100%;
+  text-align: center;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.plant_list_item-id {
+  font-size: 0.7em;
+}
+
+.plant_list_item-planted {
+  font-size: 0.6em;
 }
