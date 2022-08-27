@@ -93,7 +93,7 @@ export const AllItemStatuses = ({
     <div style={{ display: 'flex', gap: '1em' }}>
       {allStatuses.map((status) => {
         const { field, ...otherStatusFields } = status;
-        const isStatusTrue = dataItem[field] && dataItem[field] !== 'FALSE';
+        const isStatusTrue = isDataItemStatusTrue(dataItem, field);
         if (!isStatusTrue && !showStatesNotTrue) {
           return null;
         }
@@ -149,4 +149,11 @@ const scopeEval = (scope: Record<string, any>, script: string) => {
     console.log({ script, scope });
     throw e;
   }
+};
+
+export const isDataItemStatusTrue = (
+  dataItem: Record<string, string>,
+  field: string,
+) => {
+  return dataItem[field] && dataItem[field] !== 'FALSE';
 };

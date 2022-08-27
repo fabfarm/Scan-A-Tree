@@ -1,14 +1,18 @@
 import type { NextPage } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
-import { ListItem } from '../src/components/DataFields';
+import { isDataItemStatusTrue, ListItem } from '../src/components/DataFields';
 import { Layout } from '../src/components/Layout';
-import { StatusFilter } from '../src/components/StatusItem';
+import {
+  StatusesFilterValue,
+  StatusFilter,
+} from '../src/components/StatusItem';
 import {
   MetadataProvider,
   useMetadataContext,
 } from '../src/providers/metadataProvider';
+import { Status } from '../src/types/Status';
 
 const Home = () => {
   return (
@@ -26,6 +30,7 @@ const HomeContent: NextPage = () => {
     value: [],
     loading: true,
   });
+  const [statusesFilter, setStatusesFilter] = useState<StatusesFilterValue>({});
 
   useEffect(() => {
     fetchData();
@@ -46,13 +51,22 @@ const HomeContent: NextPage = () => {
   const statuses = Object.values(statusesByName);
   const data = dataState.value;
 
+  const dataToShow = filerDataDependingOnStatusFilter(
+    data,
+    statusesByName,
+    statusesFilter,
+  );
+
   return (
     <>
       <div>Filter by status</div>
-      <StatusFilter statuses={statuses as any[]} />
+      <StatusFilter
+        statuses={statuses as any[]}
+        onUpdateStatusFilter={setStatusesFilter}
+      />
       <br />
       <div className='flex flex-column gap0'>
-        {data.map((itemData) => {
+        {dataToShow.map((itemData) => {
           return <ListItem {...itemData} key={itemData.id} />;
         })}
       </div>
@@ -61,3 +75,33 @@ const HomeContent: NextPage = () => {
 };
 
 export default Home;
+
+const filerDataDependingOnStatusFilter = (
+  data: Record<string, string>[],
+  statusesByName: Record<string, Status>,
+  statusesFilter: StatusesFilterValue,
+) => {
+  const statusAndStateWanted = Object.entries(statusesFilter).filter(
+    ([key, value]) => {
+      return value && value !== 'null';
+    },
+  );
+  if (statusAndStateWanted.length === 0) {
+    return data;
+  }
+  const shouldThrowThisElement = (dataItem: Record<string, string>) => {
+    return statusAndStateWanted.some(([key, statusValue]) => {
+      const statusField = statusesByName[key]?.field;
+      const dataItemValueExists = isDataItemStatusTrue(dataItem, statusField);
+      // cosnt h
+      if (statusValue === 'true' && dataItemValueExists) {
+        return false;
+      }
+      if (statusValue === 'false' && !dataItemValueExists) {
+        return false;
+      }
+      return true;
+    });
+  };
+  return data.filter((data) => !shouldThrowThisElement(data));
+};

@@ -37,27 +37,25 @@ const nextStatusToHave: Record<StatusSelectedValue, StatusSelectedValue> = {
   null: 'true',
 };
 
+export type StatusesFilterValue = Record<string, StatusSelectedValue>;
+
 export const StatusFilter = ({
   statuses,
   onUpdateStatusFilter,
-  selected,
 }: {
   statuses: Status[];
-  onUpdateStatusFilter?: (
-    statusSelected: Record<string, StatusSelectedValue>,
-  ) => void;
-  selected?: string;
+  onUpdateStatusFilter?: (statusSelected: StatusesFilterValue) => void;
 }) => {
-  const [statusesSelected, updateStatuses] = useState<
-    Record<string, StatusSelectedValue>
-  >({});
+  const [statusesSelected, updateStatuses] = useState<StatusesFilterValue>({});
   const onSelectStatus = (statusSelected: Status) => {
     let currentStatusState = statusesSelected[statusSelected.name] || 'null';
     const newStatusState = nextStatusToHave[currentStatusState];
-    updateStatuses({
+    const newStatusesSelected = {
       ...statusesSelected,
       [statusSelected.name]: newStatusState,
-    });
+    };
+    updateStatuses(newStatusesSelected);
+    onUpdateStatusFilter?.(newStatusesSelected);
   };
   return (
     <div className='p0 flex gap0'>
