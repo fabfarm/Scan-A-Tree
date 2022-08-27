@@ -1,16 +1,16 @@
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../../src/API_SDK';
 import { DataFields } from '../../src/components/DataFields';
 import { StatusList } from '../../src/components/StatusItem';
+import { useCustomRouter } from '../../src/customRouter';
 import {
   MetadataProvider,
   useMetadataContext,
 } from '../../src/providers/metadataProvider';
 
 const CheckPage = () => {
-  const router = useRouter();
+  const router = useCustomRouter();
   const itemId = router.query?.id as string;
   if (!itemId) {
     return <div>No id received</div>;
@@ -29,7 +29,7 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
     API_SDK.getDataById(itemId),
   );
   const { statuses: statusesByName } = useMetadataContext();
-  const router = useRouter();
+  const router = useCustomRouter();
 
   useEffect(() => {
     if (itemId) {
@@ -38,7 +38,7 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
   }, [itemId]);
 
   const RedoComponent = (
-    <div className='pointer p0' onClick={() => router.push('/scan')}>
+    <div className='pointer p0' onClick={() => router.goToScan()}>
       Scan again 🔄
     </div>
   );

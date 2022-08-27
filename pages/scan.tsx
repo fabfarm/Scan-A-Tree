@@ -1,15 +1,15 @@
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { QrReader } from 'react-qr-reader';
+import { useCustomRouter } from '../src/customRouter';
 
 const ScanPage = () => {
-  const router = useRouter();
+  const router = useCustomRouter();
 
   return (
     <QRBlock
       onChange={(itemId) => {
         console.warn({ itemId });
-        router.push(`/check/${itemId}`);
+        router.goToPlantState(itemId);
       }}
     />
   );
