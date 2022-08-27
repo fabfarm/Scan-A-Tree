@@ -72,6 +72,9 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
       <br />
       <div className='flex flex-column gap1'>
         <PlantItemDatas dataItem={dataItem} />
+        <span className='plant_list_item-id'>
+          Last watered time: {dataItem.lastWateredTime}
+        </span>
         {dataItem.coordinates ? (
           <a
             href={generateGoogleMapsUrlFromCoordinates(dataItem.coordinates)}
