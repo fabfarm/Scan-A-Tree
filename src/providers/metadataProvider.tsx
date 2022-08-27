@@ -1,5 +1,5 @@
 import { keyBy } from 'lodash';
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext, useEffect } from 'react';
 import { useLocalStorage } from 'react-use';
 import { API_SDK } from '../API_SDK';
 
@@ -25,17 +25,19 @@ export const MetadataProvider = ({ children }: { children: ReactNode }) => {
     initialMetaDataContextValue,
   );
 
-  if (
-    !metadata?.lastRefresh ||
-    new Date().getTime() - new Date(metadata?.lastRefresh).getTime() >
-      REFRESH_DIFF_IN_MS
-  ) {
-    const refreshDate = new Date().toISOString();
-    API_SDK.getStatuses().then((statuses) => {
-      const statusesByName = keyBy(statuses, (status) => status.name);
-      setMetaData({ statuses: statusesByName, lastRefresh: refreshDate });
-    });
-  }
+  useEffect(() => {
+    if (
+      !metadata?.lastRefresh ||
+      new Date().getTime() - new Date(metadata?.lastRefresh).getTime() >
+        REFRESH_DIFF_IN_MS
+    ) {
+      const refreshDate = new Date().toISOString();
+      API_SDK.getStatuses().then((statuses) => {
+        const statusesByName = keyBy(statuses, (status) => status.name);
+        setMetaData({ statuses: statusesByName, lastRefresh: refreshDate });
+      });
+    }
+  }, []);
 
   return (
     <MetaDataContext.Provider value={metadata || initialMetaDataContextValue}>
