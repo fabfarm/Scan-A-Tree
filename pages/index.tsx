@@ -49,7 +49,7 @@ const HomeContent: NextPage = () => {
   return (
     <>
       <StatusList statuses={statuses as any[]} />
-      <div style={{ padding: '2em' }} className='flex flex-column gap0'>
+      <div className='flex flex-column gap0'>
         {data.map((itemData) => {
           return <ListItem {...itemData} key={itemData.id} />;
         })}
