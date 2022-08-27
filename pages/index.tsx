@@ -4,7 +4,7 @@ import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
 import { ListItem } from '../src/components/DataFields';
 import { Layout } from '../src/components/Layout';
-import { StatusList } from '../src/components/StatusItem';
+import { StatusFilter } from '../src/components/StatusItem';
 import {
   MetadataProvider,
   useMetadataContext,
@@ -48,7 +48,9 @@ const HomeContent: NextPage = () => {
 
   return (
     <>
-      <StatusList statuses={statuses as any[]} />
+      <div>Filter by status</div>
+      <StatusFilter statuses={statuses as any[]} />
+      <br />
       <div className='flex flex-column gap0'>
         {data.map((itemData) => {
           return <ListItem {...itemData} key={itemData.id} />;

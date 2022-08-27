@@ -59,6 +59,9 @@
 .border_selected {
   border: 2px solid #e99;
 }
+.border_invisible {
+  border: 2px solid transparent;
+}
 
 .pointer {
   cursor: pointer;
