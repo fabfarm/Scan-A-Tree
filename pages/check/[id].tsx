@@ -30,7 +30,6 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
     API_SDK.getDataById(itemId),
   );
   const { statuses: statusesByName } = useMetadataContext();
-  const router = useCustomRouter();
 
   useEffect(() => {
     if (itemId) {
@@ -38,28 +37,16 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
     }
   }, [itemId]);
 
-  const RedoComponent = (
-    <div className='pointer p0' onClick={() => router.goToScan()}>
-      Scan again 🔄
-    </div>
-  );
-
   if (dataState.loading) {
     return <div>Loading</div>;
   }
   if (dataState.error) {
-    return (
-      <div>
-        {RedoComponent}
-        {dataState.error.message}
-      </div>
-    );
+    return <div>{dataState.error.message}</div>;
   }
 
   if (!dataState.value) {
     return (
       <div>
-        {RedoComponent}
         <div>No data found</div>
       </div>
     );
@@ -69,7 +56,6 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
 
   return (
     <div>
-      {RedoComponent}
       <DataFields
         {...{
           ...(dataItem as Record<string, string>),
