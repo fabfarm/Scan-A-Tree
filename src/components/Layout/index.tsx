@@ -7,11 +7,12 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
       className='flex flex-column align-center'
-      style={{ position: 'relative', height: '100vh' }}
+      style={{ position: 'relative', height: '100vh', paddingTop: 30 }}
     >
       <div
         style={{
           maxWidth: 400,
+          padding: '0 1em',
           paddingBottom: BOTTOM_BAR_HEIGHT,
           overflow: 'scroll',
         }}
