@@ -7,7 +7,6 @@ import {
   PlantItemPicture,
 } from '../../src/components/DataFields';
 import { Layout } from '../../src/components/Layout';
-import { StatusList } from '../../src/components/StatusItem';
 import { useCustomRouter } from '../../src/customRouter';
 import {
   MetadataProvider,
@@ -73,9 +72,23 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
       <br />
       <div className='flex flex-column gap1'>
         <PlantItemDatas dataItem={dataItem} />
+        {dataItem.coordinates ? (
+          <a
+            href={generateGoogleMapsUrlFromCoordinates(dataItem.coordinates)}
+            target='_blank norefereer'
+            style={{ fontSize: '1.2em', marginTop: '3em' }}
+          >
+            📍 Go to the plant
+          </a>
+        ) : null}
       </div>
     </div>
   );
 };
 
 export default CheckPage;
+
+const generateGoogleMapsUrlFromCoordinates = (coordinates: string) => {
+  const [lat, lon] = coordinates.split(',');
+  return `https://www.google.com/maps/preview?q=${lon},${lat}`;
+};
