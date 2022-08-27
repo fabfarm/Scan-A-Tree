@@ -78,31 +78,4 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
   );
 };
 
-const ChangeStatusBlock = ({
-  itemId,
-  onSuccess,
-  selected,
-}: {
-  itemId: string;
-  onSuccess: (data: any) => void;
-  selected?: string;
-}) => {
-  //   const [inputValue, setInputValue] = useState('');
-  const [updateItemState, updateItem] = useAsyncFn(API_SDK.updateDataById);
-  const { statuses } = useMetadataContext();
-  const allStatuses = Object.values(statuses || {});
-
-  return (
-    <StatusList
-      statuses={allStatuses as any[]}
-      selected={selected}
-      onItemClick={(status) =>
-        updateItem(itemId, { status: status.name }).then((data) =>
-          onSuccess(data),
-        )
-      }
-    />
-  );
-};
-
 export default CheckPage;
