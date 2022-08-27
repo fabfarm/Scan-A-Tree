@@ -6,6 +6,18 @@
   flex-direction: column;
 }
 
+.align-center {
+  align-items: center;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.text-center {
+  text-align: center;
+}
+
 .p0 {
   padding: 0.5em;
 }

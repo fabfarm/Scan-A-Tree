@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../../src/API_SDK';
 import { DataFields } from '../../src/components/DataFields';
+import { Layout } from '../../src/components/Layout';
 import { StatusList } from '../../src/components/StatusItem';
 import { useCustomRouter } from '../../src/customRouter';
 import {
@@ -17,9 +18,9 @@ const CheckPage = () => {
   }
   return (
     <MetadataProvider>
-      <div style={{ padding: '0 1em' }}>
+      <Layout>
         <CheckPageContent itemId={itemId} />
-      </div>
+      </Layout>
     </MetadataProvider>
   );
 };

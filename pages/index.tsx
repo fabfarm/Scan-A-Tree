@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../src/API_SDK';
 import { DataFields } from '../src/components/DataFields';
+import { Layout } from '../src/components/Layout';
 import { StatusList } from '../src/components/StatusItem';
 import {
   MetadataProvider,
@@ -12,7 +13,9 @@ import {
 const Home = () => {
   return (
     <MetadataProvider>
-      <HomeContent />
+      <Layout>
+        <HomeContent />
+      </Layout>
     </MetadataProvider>
   );
 };
@@ -44,7 +47,7 @@ const HomeContent: NextPage = () => {
   const data = dataState.value;
 
   return (
-    <div className='p2'>
+    <>
       <StatusList statuses={statuses as any[]} />
       <div style={{ padding: '2em' }}>
         {data.map(({ id, name, age, comingFrom, status }) => {
@@ -62,7 +65,7 @@ const HomeContent: NextPage = () => {
           );
         })}
       </div>
-    </div>
+    </>
   );
 };
 

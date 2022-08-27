@@ -1,17 +1,26 @@
 import { useEffect, useState } from 'react';
 import { QrReader } from 'react-qr-reader';
+import { Layout } from '../src/components/Layout';
 import { useCustomRouter } from '../src/customRouter';
 
 const ScanPage = () => {
   const router = useCustomRouter();
 
   return (
-    <QRBlock
-      onChange={(itemId) => {
-        console.warn({ itemId });
-        router.goToPlantState(itemId);
-      }}
-    />
+    <Layout>
+      <QRBlock
+        onChange={(itemId) => {
+          console.warn({ itemId });
+          router.goToPlantState(itemId);
+        }}
+      />
+      <div className='text-center'>
+        <div style={{ fontSize: '1.3em', fontWeight: 'bold' }}>
+          Scan plan QR Code
+        </div>
+        <div>Thank you 🙂</div>
+      </div>
+    </Layout>
   );
 };
 
