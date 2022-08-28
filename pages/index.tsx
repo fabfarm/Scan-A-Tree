@@ -65,7 +65,10 @@ const HomeContent: NextPage = () => {
         onUpdateStatusFilter={setStatusesFilter}
       />
       <br />
-      <div className='flex flex-column gap0'>
+      <div
+        className='flex flex-column gap0 overflow-scroll'
+        style={{ paddingRight: 10 }}
+      >
         {dataToShow.map((itemData) => {
           return <ListItem {...itemData} key={itemData.id} />;
         })}

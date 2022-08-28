@@ -7,16 +7,21 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
       className='flex flex-column align-center'
-      style={{ position: 'relative', height: '100vh', paddingTop: 30 }}
+      style={{
+        position: 'relative',
+        height: '100vh',
+        paddingTop: 30,
+        overflow: 'hidden',
+      }}
     >
       <div
         style={{
           maxWidth: 400,
           padding: '0 1em',
-          paddingBottom: BOTTOM_BAR_HEIGHT,
-          overflow: 'scroll',
+          paddingBottom: BOTTOM_BAR_HEIGHT + 5,
           width: '100%',
         }}
+        className='flex flex-column overflow-hidden'
       >
         {children}
       </div>
@@ -34,7 +39,7 @@ const BottomNavBar = () => {
         borderTop: '1px solid #eee',
         fontSize: '3em',
         justifyContent: 'space-evenly',
-        position: 'absolute',
+        position: 'fixed',
         bottom: 0,
         height: BOTTOM_BAR_HEIGHT,
         backgroundColor: 'white',
