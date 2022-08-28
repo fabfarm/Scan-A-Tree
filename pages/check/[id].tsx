@@ -1,25 +1,29 @@
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../../src/API_SDK';
-import { DataFields } from '../../src/components/DataFields';
-import { StatusList } from '../../src/components/StatusItem';
+import {
+  AllItemStatuses,
+  PlantItemDatas,
+  PlantItemPicture,
+} from '../../src/components/DataFields';
+import { Layout } from '../../src/components/Layout';
+import { useCustomRouter } from '../../src/customRouter';
 import {
   MetadataProvider,
   useMetadataContext,
 } from '../../src/providers/metadataProvider';
 
 const CheckPage = () => {
-  const router = useRouter();
+  const router = useCustomRouter();
   const itemId = router.query?.id as string;
   if (!itemId) {
     return <div>No id received</div>;
   }
   return (
     <MetadataProvider>
-      <div style={{ padding: '0 1em' }}>
+      <Layout>
         <CheckPageContent itemId={itemId} />
-      </div>
+      </Layout>
     </MetadataProvider>
   );
 };
@@ -29,7 +33,6 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
     API_SDK.getDataById(itemId),
   );
   const { statuses: statusesByName } = useMetadataContext();
-  const router = useRouter();
 
   useEffect(() => {
     if (itemId) {
@@ -37,28 +40,16 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
     }
   }, [itemId]);
 
-  const RedoComponent = (
-    <div className='pointer p0' onClick={() => router.push('/scan')}>
-      Scan again 🔄
-    </div>
-  );
-
   if (dataState.loading) {
     return <div>Loading</div>;
   }
   if (dataState.error) {
-    return (
-      <div>
-        {RedoComponent}
-        {dataState.error.message}
-      </div>
-    );
+    return <div>{dataState.error.message}</div>;
   }
 
   if (!dataState.value) {
     return (
       <div>
-        {RedoComponent}
         <div>No data found</div>
       </div>
     );
@@ -67,54 +58,40 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
   const dataItem = dataState.value as unknown as Record<string, string>;
 
   return (
-    <div>
-      {RedoComponent}
-      <DataFields
-        {...{
-          ...(dataItem as Record<string, string>),
-          status:
-            (statusesByName?.[dataItem?.status]?.icon as string) ||
-            dataItem?.status,
-        }}
-        column={'true'}
-      />
-      <ChangeStatusBlock
-        itemId={itemId}
-        selected={dataItem?.status}
-        onSuccess={(data) => {
-          console.log(data);
+    <div style={{ width: '100%' }}>
+      <PlantItemPicture dataItem={dataItem} />
+      <br />
+      <div className='bold'>Click to update statuses</div>
+      <AllItemStatuses
+        dataItem={dataItem}
+        showStatesNotTrue
+        onStatusUpdate={() => {
           getItemData();
         }}
       />
+      <br />
+      <div className='flex flex-column gap1'>
+        <PlantItemDatas dataItem={dataItem} />
+        <span className='plant_list_item-id'>
+          Last watered time: {dataItem.lastWateredTime}
+        </span>
+        {dataItem.coordinates ? (
+          <a
+            href={generateGoogleMapsUrlFromCoordinates(dataItem.coordinates)}
+            target='_blank norefereer'
+            style={{ fontSize: '1.2em', marginTop: '3em' }}
+          >
+            📍 Go to the plant
+          </a>
+        ) : null}
+      </div>
     </div>
   );
 };
 
-const ChangeStatusBlock = ({
-  itemId,
-  onSuccess,
-  selected,
-}: {
-  itemId: string;
-  onSuccess: (data: any) => void;
-  selected?: string;
-}) => {
-  //   const [inputValue, setInputValue] = useState('');
-  const [updateItemState, updateItem] = useAsyncFn(API_SDK.updateDataById);
-  const { statuses } = useMetadataContext();
-  const allStatuses = Object.values(statuses || {});
-
-  return (
-    <StatusList
-      statuses={allStatuses as any[]}
-      selected={selected}
-      onItemClick={(status) =>
-        updateItem(itemId, { status: status.name }).then((data) =>
-          onSuccess(data),
-        )
-      }
-    />
-  );
-};
-
 export default CheckPage;
+
+const generateGoogleMapsUrlFromCoordinates = (coordinates: string) => {
+  const [lat, lon] = coordinates.split(',');
+  return `https://www.google.com/maps/preview?q=${lon},${lat}`;
+};
