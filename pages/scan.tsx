@@ -46,7 +46,7 @@ const QRBlock = ({ onChange }: { onChange: (textValue: string) => void }) => {
             setValueFound(valueFound);
           }
         }}
-        constraints={{}}
+        constraints={{ facingMode: 'environment' }}
       />
     </div>
   );
