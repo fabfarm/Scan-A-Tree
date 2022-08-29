@@ -2,6 +2,7 @@ import { CSSProperties } from 'react';
 import { API_SDK } from '../API_SDK';
 import { useCustomRouter } from '../customRouter';
 import { useMetadataContext } from '../providers/metadataProvider';
+import { scopeEval } from '../shared/scopeEval';
 import { Status } from '../types/Status';
 
 export const DataFields = ({
@@ -157,16 +158,6 @@ const updateStatus = (
     : { [status.field]: currentValue ? 'FALSE' : 'TRUE' };
   console.log({ updateBody });
   return API_SDK.updateDataById(dataItem.id, updateBody);
-};
-
-const scopeEval = (scope: Record<string, any>, script: string) => {
-  try {
-    // eslint-disable-next-line no-new-func
-    return Function(`"use strict";return (${script || null})`).bind(scope)();
-  } catch (e) {
-    console.log({ script, scope });
-    throw e;
-  }
 };
 
 export const isDataItemStatusTrue = (
