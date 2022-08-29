@@ -106,6 +106,7 @@
   position: relative;
   max-width: 200px;
   border-right: 1px solid #eee;
+  overflow: hidden;
 }
 
 .plant_list_item-right {
