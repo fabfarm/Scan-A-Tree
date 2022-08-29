@@ -10,33 +10,36 @@ const UpdateTreesPage = () => {
   );
   return (
     <Layout>
-      <div>
-        1. Paste the Trees.kml exported from google maps in the text area below
-        then click on go
-      </div>
-      <div>
-        2. Check the result printed below is not error and match the updates you
-        made :)
-      </div>
-      <div>
-        <button
-          onClick={() => {
-            updateTreesData(inputValue);
+      <div style={{ overflow: 'scroll' }}>
+        <div>
+          1. Paste the Trees.kml exported from google maps in the text area
+          below then click on go
+        </div>
+        <div>
+          2. Check the result printed below is not error and match the updates
+          you made :)
+        </div>
+        <div>
+          <button
+            onClick={() => {
+              updateTreesData(inputValue);
+            }}
+          >
+            Go
+          </button>{' '}
+          ({updateTreesDataState.loading ? 'Loading' : ''})
+        </div>
+        <textarea
+          value={inputValue}
+          onChange={(e) => {
+            setValue(e.target.value);
           }}
-        >
-          Go
-        </button>
-      </div>
-      <textarea
-        value={inputValue}
-        onChange={(e) => {
-          setValue(e.target.value);
-        }}
-        style={{ width: '100%', minHeight: 300 }}
-      ></textarea>
-      <div style={{ fontWeight: 'bold', fontSize: '1.5em' }}>Result</div>
-      <div style={{ whiteSpace: 'pre-wrap' }}>
-        {JSON.stringify(updateTreesDataState?.value, null, 12)}
+          style={{ width: '100%', minHeight: 300 }}
+        ></textarea>
+        <div style={{ fontWeight: 'bold', fontSize: '1.5em' }}>Result</div>
+        <div style={{ whiteSpace: 'pre-wrap' }}>
+          {JSON.stringify(updateTreesDataState?.value, null, 12)}
+        </div>
       </div>
     </Layout>
   );
