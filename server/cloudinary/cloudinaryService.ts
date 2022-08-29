@@ -6,7 +6,7 @@ import {
 
 export class CloudinaryService {
   async upload(
-    image,
+    image: string,
     options: UploadApiOptions = {},
   ): Promise<UploadApiResponse> {
     const result = await cloudinary.uploader.upload(image, options);
