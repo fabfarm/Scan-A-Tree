@@ -30,6 +30,7 @@ const API_ROUTES = {
   STATUSES: '/api/statuses',
   ONE_DATA: (dataId: string) => `/api/data/${dataId}`,
   UPDATE_TREES: '/api/update_trees',
+  UPLOAD_IMAGE: '/api/images/upload',
 };
 
 export const API_SDK = {
@@ -60,5 +61,15 @@ export const API_SDK = {
   },
   updateTreesData: (data: string) => {
     return basicFetchService.post(API_ROUTES.UPDATE_TREES, { data });
+  },
+  uploadImage: (itemId: string, image: string) => {
+    if (!image) {
+      throw Error('No file received to upload');
+    }
+    return basicFetchService.post(API_ROUTES.UPLOAD_IMAGE, {
+      image,
+      itemId,
+      fieldToUpdate: 'image',
+    });
   },
 };
