@@ -1,5 +1,5 @@
 import { Promise as bluebird } from 'bluebird';
-import { CredentialBody } from 'google-auth-library';
+import { GoogleAuth } from 'google-auth-library';
 import { google, sheets_v4 } from 'googleapis';
 import * as _ from 'lodash';
 import { Errors } from './errors';
@@ -22,9 +22,7 @@ export interface IStorageOptions {
   table?: string;
 
   // google spreadsheet settings
-  apiKey?: string;
-  keyFile?: string;
-  credentials?: CredentialBody;
+  auth: string | GoogleAuth;
 
   // storage settings
   cacheTimeoutMs?: number; // ms
@@ -41,16 +39,11 @@ export default class GoogleStorage implements IStorage {
   private cacheTimeoutMs: number;
 
   constructor(opts: IStorageOptions) {
-    if (!opts.apiKey && !opts.keyFile) {
+    if (!opts.auth) {
       throw new Errors.StorageOptionsError();
     }
 
-    const auth = opts.apiKey
-      ? opts.apiKey
-      : new google.auth.GoogleAuth({
-          scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-          keyFile: opts.keyFile,
-        });
+    const auth = opts.auth;
     this.sheets = google.sheets({
       version: 'v4',
       auth: auth || '',
