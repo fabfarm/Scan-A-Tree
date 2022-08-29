@@ -27,16 +27,16 @@ const CheckPage = () => {
 };
 
 const CheckPageContent = ({ itemId }: { itemId: string }) => {
+  const { updateItemFields } = useMetadataContext();
   const [dataState, getItemData] = useAsyncFn(() =>
-    API_SDK.getDataById(itemId),
+    API_SDK.getDataById(itemId, updateItemFields),
   );
-  const { statuses: statusesByName } = useMetadataContext();
 
   useEffect(() => {
     if (itemId) {
       getItemData();
     }
-  }, [itemId]);
+  }, [itemId, updateItemFields]);
 
   let ContentComponent: ReactNode = null;
   if (dataState.error) {

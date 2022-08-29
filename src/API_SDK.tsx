@@ -35,15 +35,34 @@ const API_ROUTES = {
 };
 
 export const API_SDK = {
-  getData: () => {
-    return basicFetchService.get<Array<Record<string, string>>>(
-      API_ROUTES.DATA,
-    );
+  getData: (
+    mappingFn: (
+      item: Record<string, string>,
+    ) => Record<string, string> = () => {
+      return {};
+    },
+  ) => {
+    return basicFetchService
+      .get<Array<Record<string, string>>>(API_ROUTES.DATA)
+      .then((datas) =>
+        datas.map((item) => {
+          return { ...item, ...mappingFn?.(item) };
+        }),
+      );
   },
-  getDataById: (dataId: string) => {
-    return basicFetchService.get<Array<Record<string, string>>>(
-      API_ROUTES.ONE_DATA(dataId),
-    );
+  getDataById: (
+    dataId: string,
+    mappingFn: (
+      item: Record<string, string>,
+    ) => Record<string, string> = () => {
+      return {};
+    },
+  ) => {
+    return basicFetchService
+      .get<Record<string, string>>(API_ROUTES.ONE_DATA(dataId))
+      .then((item) => {
+        return { ...item, ...mappingFn?.(item) };
+      });
   },
   updateDataById: (dataId: string, body: Record<string, string>) => {
     return basicFetchService.post<Array<Record<string, string>>>(
