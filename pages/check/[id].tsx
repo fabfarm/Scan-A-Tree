@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { API_SDK } from '../../src/API_SDK';
 import {
@@ -21,9 +21,7 @@ const CheckPage = () => {
   }
   return (
     <MetadataProvider>
-      <Layout>
-        <CheckPageContent itemId={itemId} />
-      </Layout>
+      <CheckPageContent itemId={itemId} />
     </MetadataProvider>
   );
 };
@@ -40,52 +38,63 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
     }
   }, [itemId]);
 
-  if (dataState.loading) {
-    return <div>Loading</div>;
-  }
+  let ContentComponent: ReactNode = null;
   if (dataState.error) {
-    return <div>{dataState.error.message}</div>;
-  }
-
-  if (!dataState.value) {
-    return (
+    ContentComponent = <div>{dataState.error.message}</div>;
+  } else if (dataState.loading) {
+    ContentComponent = <div>Loading</div>;
+  } else if (!dataState.value) {
+    ContentComponent = (
       <div>
         <div>No data found</div>
       </div>
     );
   }
 
+  if (ContentComponent) {
+    return <Layout>{ContentComponent}</Layout>;
+  }
+
   const dataItem = dataState.value as unknown as Record<string, string>;
 
   return (
-    <div style={{ width: '100%' }}>
-      <PlantItemPicture dataItem={dataItem} />
-      <br />
-      <div className='bold'>Click to update statuses</div>
-      <AllItemStatuses
-        dataItem={dataItem}
-        showStatesNotTrue
-        onStatusUpdate={() => {
-          getItemData();
-        }}
-      />
-      <br />
-      <div className='flex flex-column gap1'>
-        <PlantItemDatas dataItem={dataItem} />
-        <span className='plant_list_item-id'>
-          Last watered time: {dataItem.lastWateredTime}
-        </span>
-        {dataItem.coordinates ? (
-          <a
-            href={generateGoogleMapsUrlFromCoordinates(dataItem.coordinates)}
-            target='_blank norefereer'
-            style={{ fontSize: '1.2em', marginTop: '3em' }}
-          >
-            📍 Go to the plant
-          </a>
-        ) : null}
+    <Layout
+      bottomBarActions={
+        dataItem.coordinates
+          ? [
+              {
+                emoji: '🧭',
+                action: () => {
+                  window.open(
+                    generateGoogleMapsUrlFromCoordinates(dataItem.coordinates),
+                    '_blank norefereer',
+                  );
+                },
+              },
+            ]
+          : undefined
+      }
+    >
+      <div style={{ width: '100%' }}>
+        <PlantItemPicture dataItem={dataItem} />
+        <br />
+        <div className='bold'>Click to update statuses</div>
+        <AllItemStatuses
+          dataItem={dataItem}
+          showStatesNotTrue
+          onStatusUpdate={() => {
+            getItemData();
+          }}
+        />
+        <br />
+        <div className='flex flex-column gap1'>
+          <PlantItemDatas dataItem={dataItem} />
+          <span className='plant_list_item-id'>
+            Last watered time: {dataItem.lastWateredTime}
+          </span>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
