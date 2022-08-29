@@ -1,7 +1,7 @@
 import { google } from 'googleapis';
 import Database from './sheetsql-copy';
 
-type SheetNames = 'data' | 'statuses';
+type SheetNames = 'data' | 'statuses' | 'computedFields';
 const GS_CREDENTIALS_STRING = process.env.GS_CREDENTIALS;
 if (!GS_CREDENTIALS_STRING) {
   throw Error('No GS_CREDENTIALS received');
@@ -23,4 +23,5 @@ export const getSheetDatabase = (sheetName: SheetNames) => {
 };
 
 export const statusesDatabase = getSheetDatabase('statuses');
+export const computedFieldsDatabase = getSheetDatabase('computedFields');
 export const dataDatabase = getSheetDatabase('data');

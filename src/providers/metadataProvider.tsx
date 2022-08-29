@@ -34,7 +34,22 @@ export const MetadataProvider = ({ children }: { children: ReactNode }) => {
       const refreshDate = new Date().toISOString();
       API_SDK.getStatuses().then((statuses) => {
         const statusesByName = keyBy(statuses, (status) => status.name);
-        setMetaData({ statuses: statusesByName, lastRefresh: refreshDate });
+        setMetaData((metadataState) => {
+          return {
+            ...metadataState,
+            statuses: statusesByName,
+            lastRefresh: refreshDate,
+          };
+        });
+      });
+      API_SDK.getComputedFields().then((computedFields) => {
+        setMetaData((metadataState) => {
+          return {
+            ...metadataState,
+            computedFields,
+            lastRefresh: refreshDate,
+          };
+        });
       });
     }
   }, []);

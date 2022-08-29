@@ -28,6 +28,7 @@ const basicFetchService = {
 const API_ROUTES = {
   DATA: '/api/data',
   STATUSES: '/api/statuses',
+  COMPUTED_FIELDS: '/api/computed_fields',
   ONE_DATA: (dataId: string) => `/api/data/${dataId}`,
   UPDATE_TREES: '/api/update_trees',
   UPLOAD_IMAGE: '/api/images/upload',
@@ -52,6 +53,11 @@ export const API_SDK = {
   },
   getStatuses: () => {
     return basicFetchService.get<Status[]>(API_ROUTES.STATUSES);
+  },
+  getComputedFields: () => {
+    return basicFetchService.get<Array<{ name: string; value: string }>>(
+      API_ROUTES.COMPUTED_FIELDS,
+    );
   },
   updateStatus: (itemId: string, newStatus: string) => {
     return basicFetchService.post(API_ROUTES.STATUSES, {
