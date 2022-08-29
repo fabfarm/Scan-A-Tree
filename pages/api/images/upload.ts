@@ -1,41 +1,28 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import multer from 'multer';
 import { NextApiRequest, NextApiResponse } from 'next';
-import nextConnect from 'next-connect';
-import { cloudinaryService } from '../../../server/modules/cloudinary/cloudinaryService';
+import { cloudinaryService } from '../../../server/cloudinary/cloudinaryService';
+import { dataDatabase } from '../../../server/sheetDatabase';
 
-type NextApiRequestWithFormData = NextApiRequest & {
-  file: {
-    fieldname: string;
-    originalname: string;
-    encoding: string;
-    mimetype: string;
-    path: string;
-    size: null;
-  };
-};
-
-const apiRoute = nextConnect();
-const upload = multer({ dest: '/tmp' });
-apiRoute.use(upload.single('file'));
-
-apiRoute.post(async (req: NextApiRequestWithFormData, res: NextApiResponse) => {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const image = req.body.image as string;
+  const itemId = req.body.itemId as string;
+  const fieldToUpdate = req.body.fieldToUpdate as string;
   try {
-    const result = await cloudinaryService.upload(req.file.path, {
+    const result = await cloudinaryService.upload(image, {
       resource_type: 'image',
-      folder: 'test',
+      folder: process.env.CLOUDINARY_FOLDER || '_default_',
     });
+    const imageSecureUrl = result.secure_url;
+    await dataDatabase.updateOne(
+      { id: itemId },
+      { [fieldToUpdate]: imageSecureUrl },
+    );
     res.json({ imageUrl: result.secure_url });
   } catch (e) {
     console.error(e);
     res.status(400).json({ e });
   }
-});
-
-export default apiRoute;
-
-export const config = {
-  api: {
-    bodyParser: false, // Disallow body parsing, consume as stream
-  },
-};
+}
