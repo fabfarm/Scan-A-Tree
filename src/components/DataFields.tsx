@@ -32,7 +32,11 @@ export const ListItem = (dataItem: Record<string, string>) => {
   const { id, areaName, planted } = dataItem;
   return (
     <div className='plant_list_item'>
-      <PlantItemPicture className='plant_list_item-left' dataItem={dataItem} />
+      <PlantItemPicture
+        className='plant_list_item-left'
+        dataItem={dataItem}
+        hideUpdateImage
+      />
       <div className='flex flex-column gap1 justify-center plant_list_item-right'>
         <AllItemStatuses dataItem={dataItem} />
         <PlantItemDatas dataItem={dataItem} />
@@ -49,32 +53,36 @@ export const ListItem = (dataItem: Record<string, string>) => {
 export const PlantItemPicture = ({
   dataItem: { image, description, name, id },
   className,
+  hideUpdateImage,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & {
   dataItem: Record<string, string>;
+  hideUpdateImage?: boolean;
 }) => {
   const router = useCustomRouter();
   return (
     <div className={`position-relative ${className}`} {...props}>
       <img className='plant_list_item-picture' src={image} alt={name} />
       <span className='plant_list_item-name'>{description}</span>
-      <div
-        className='pointer'
-        style={{
-          backgroundColor: '#0000008f',
-          color: 'white',
-          position: 'absolute',
-          top: 10,
-          right: 10,
-          padding: '.2em .5em',
-          borderRadius: 8,
-        }}
-        onClick={() => {
-          router.addImage(id);
-        }}
-      >
-        Update Image ✏️
-      </div>
+      {hideUpdateImage ? null : (
+        <div
+          className='pointer'
+          style={{
+            backgroundColor: '#0000008f',
+            color: 'white',
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            padding: '.2em .5em',
+            borderRadius: 8,
+          }}
+          onClick={() => {
+            router.addImage(id);
+          }}
+        >
+          Update Image ✏️
+        </div>
+      )}
     </div>
   );
 };
