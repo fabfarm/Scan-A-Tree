@@ -1,5 +1,5 @@
 import path from 'path';
-import Database from 'sheetsql';
+import Database from './sheetsql-copy';
 
 type SheetNames = 'data' | 'statuses';
 
