@@ -46,16 +46,34 @@ export const ListItem = (dataItem: Record<string, string>) => {
 };
 
 export const PlantItemPicture = ({
-  dataItem: { image, description, name },
+  dataItem: { image, description, name, id },
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & {
   dataItem: Record<string, string>;
 }) => {
+  const router = useCustomRouter();
   return (
     <div className={`position-relative ${className}`} {...props}>
       <img className='plant_list_item-picture' src={image} alt={name} />
       <span className='plant_list_item-name'>{description}</span>
+      <div
+        className='pointer'
+        style={{
+          backgroundColor: '#0000008f',
+          color: 'white',
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          padding: '.2em .5em',
+          borderRadius: 8,
+        }}
+        onClick={() => {
+          router.addImage(id);
+        }}
+      >
+        Update Image ✏️
+      </div>
     </div>
   );
 };
