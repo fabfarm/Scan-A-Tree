@@ -100,6 +100,7 @@
 
 .plant_list_item-picture {
   min-height: 200px;
+  max-width: 100%;
 }
 
 .plant_list_item-left {
