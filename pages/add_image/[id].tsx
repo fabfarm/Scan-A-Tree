@@ -27,6 +27,7 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
   const [dataState, getItemData] = useAsyncFn(() =>
     API_SDK.getDataById(itemId),
   );
+  const [uploadImageState, uploadImage] = useAsyncFn(API_SDK.uploadImage);
   const { statuses: statusesByName } = useMetadataContext();
 
   useEffect(() => {
@@ -83,17 +84,21 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
           {/* @ts-ignore */}
           {({ getScreenshot }) => (
             <button
+              disabled={uploadImageState.loading}
               onClick={async () => {
+                if (uploadImageState.loading) {
+                  return;
+                }
                 const imageSrc = getScreenshot();
                 if (imageSrc) {
-                  await API_SDK.uploadImage(itemId, imageSrc);
+                  await uploadImage(itemId, imageSrc);
                   router.goToPlantState(itemId);
                 } else {
                   window.alert('No image found');
                 }
               }}
             >
-              Capture photo
+              {uploadImageState.loading ? 'Uploading...' : 'Capture photo'}
             </button>
           )}
         </Webcam>
