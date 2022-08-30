@@ -100,12 +100,18 @@
 
 .plant_list_item-picture {
   min-height: 200px;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .plant_list_item-left {
   position: relative;
   max-width: 200px;
   border-right: 1px solid #eee;
+  overflow: hidden;
 }
 
 .plant_list_item-right {

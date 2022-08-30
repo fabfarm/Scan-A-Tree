@@ -1,11 +1,7 @@
 import { ReactNode, useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
+import Webcam from 'react-webcam';
 import { API_SDK } from '../../src/API_SDK';
-import {
-  AllItemStatuses,
-  PlantItemDatas,
-  PlantItemPicture,
-} from '../../src/components/DataFields';
 import { Layout } from '../../src/components/Layout';
 import { useCustomRouter } from '../../src/customRouter';
 import {
@@ -13,7 +9,7 @@ import {
   useMetadataContext,
 } from '../../src/providers/metadataProvider';
 
-const CheckPage = () => {
+const AddImagePage = () => {
   const router = useCustomRouter();
   const itemId = router.query?.id as string;
   if (!itemId) {
@@ -27,10 +23,12 @@ const CheckPage = () => {
 };
 
 const CheckPageContent = ({ itemId }: { itemId: string }) => {
+  const router = useCustomRouter();
   const { updateItemFields } = useMetadataContext();
   const [dataState, getItemData] = useAsyncFn(() =>
     API_SDK.getDataById(itemId, updateItemFields),
   );
+  const [uploadImageState, uploadImage] = useAsyncFn(API_SDK.uploadImage);
 
   useEffect(() => {
     if (itemId) {
@@ -76,29 +74,40 @@ const CheckPageContent = ({ itemId }: { itemId: string }) => {
       }
     >
       <div style={{ width: '100%' }}>
-        <PlantItemPicture dataItem={dataItem} />
-        <br />
-        <div className='bold'>Click to update statuses</div>
-        <AllItemStatuses
-          dataItem={dataItem}
-          showStatesNotTrue
-          onStatusUpdate={() => {
-            getItemData();
-          }}
-        />
-        <br />
-        <div className='flex flex-column gap1'>
-          <PlantItemDatas dataItem={dataItem} />
-          <span className='plant_list_item-id'>
-            Last watered time: {dataItem.lastWateredTime}
-          </span>
-        </div>
+        <Webcam
+          audio={false}
+          height={400}
+          screenshotFormat='image/jpeg'
+          width={300}
+          videoConstraints={{ facingMode: 'environment' }}
+        >
+          {/* @ts-ignore */}
+          {({ getScreenshot }) => (
+            <button
+              disabled={uploadImageState.loading}
+              onClick={async () => {
+                if (uploadImageState.loading) {
+                  return;
+                }
+                const imageSrc = getScreenshot();
+                if (imageSrc) {
+                  await uploadImage(itemId, imageSrc);
+                  router.goToPlantState(itemId);
+                } else {
+                  window.alert('No image found');
+                }
+              }}
+            >
+              {uploadImageState.loading ? 'Uploading...' : 'Capture photo'}
+            </button>
+          )}
+        </Webcam>
       </div>
     </Layout>
   );
 };
 
-export default CheckPage;
+export default AddImagePage;
 
 const generateGoogleMapsUrlFromCoordinates = (coordinates: string) => {
   const [lat, lon] = coordinates.split(',');

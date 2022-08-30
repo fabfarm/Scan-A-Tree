@@ -25,7 +25,7 @@ const Home = () => {
 };
 
 const HomeContent: NextPage = () => {
-  const { statuses: statusesByName } = useMetadataContext();
+  const { statuses: statusesByName, updateItemFields } = useMetadataContext();
   const [dataState, fetchData] = useAsyncFn(API_SDK.getData, [], {
     value: [],
     loading: true,
@@ -33,7 +33,7 @@ const HomeContent: NextPage = () => {
   const [statusesFilter, setStatusesFilter] = useState<StatusesFilterValue>({});
 
   useEffect(() => {
-    fetchData();
+    fetchData(updateItemFields);
   }, []);
 
   if (dataState.loading) {

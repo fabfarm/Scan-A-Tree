@@ -3,7 +3,10 @@ import { useCustomRouter } from '../../customRouter';
 
 const BOTTOM_BAR_HEIGHT = 60;
 
-export const Layout: FC<PropsWithChildren> = ({ children }) => {
+export const Layout: FC<PropsWithChildren & BottomNavBarProps> = ({
+  children,
+  bottomBarActions,
+}) => {
   return (
     <div
       className='flex flex-column align-center'
@@ -25,12 +28,20 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
       >
         {children}
       </div>
-      <BottomNavBar />
+      <BottomNavBar bottomBarActions={bottomBarActions} />
     </div>
   );
 };
 
-const BottomNavBar = () => {
+type BottomNavBarProps = {
+  bottomBarActions?: BottomBarAction[];
+};
+type BottomBarAction = {
+  emoji: string;
+  action: () => void;
+};
+
+const BottomNavBar = ({ bottomBarActions = [] }: BottomNavBarProps) => {
   const router = useCustomRouter();
   return (
     <div
@@ -48,6 +59,9 @@ const BottomNavBar = () => {
     >
       <BottomNavBarTab emoji='🏡' onClick={() => router.goToMain()} />
       <BottomNavBarTab emoji='📷' onClick={() => router.goToScan()} />
+      {bottomBarActions.map(({ emoji, action }) => (
+        <BottomNavBarTab key={emoji} emoji={emoji} onClick={() => action()} />
+      ))}
     </div>
   );
 };
