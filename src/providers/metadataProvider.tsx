@@ -45,25 +45,16 @@ export const MetadataProvider = ({ children }: { children: ReactNode }) => {
         REFRESH_DIFF_IN_MS
     ) {
       const refreshDate = new Date().toISOString();
-      API_SDK.getComputedFields().then((computedFields) => {
-        setMetaData((metadataState) => {
-          return {
-            ...metadataState,
+      Promise.all([API_SDK.getComputedFields(), API_SDK.getStatuses()]).then(
+        ([computedFields, statuses]) => {
+          const statusesByName = keyBy(statuses, (status) => status.name);
+          setMetaData({
             computedFields,
-            lastRefresh: refreshDate,
-          };
-        });
-      });
-      API_SDK.getStatuses().then((statuses) => {
-        const statusesByName = keyBy(statuses, (status) => status.name);
-        setMetaData((metadataState) => {
-          return {
-            ...metadataState,
             statuses: statusesByName,
             lastRefresh: refreshDate,
-          };
-        });
-      });
+          });
+        },
+      );
     }
   }, []);
 
